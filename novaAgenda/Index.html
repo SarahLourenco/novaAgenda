@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Contato App</title>
+</head>
+<body>
+    <div>
+        <h2>All Contatos</h2>
+        <ul id="contato" />
+    </div>
+    <div>
+        <h2>Busca por ID</h2>
+        <input type="text" id="contatoId" size="5" />
+        <input type="button" value="Busca" onclick="find();" />
+        <p id="contato2" />
+    </div>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script>
+    var uri = 'api/contato';
+    $(document).ready(function () {
+      // quando HTML por carregado.
+      $.getJSON(uri)
+          .done(function (data) {
+            // On success, 'data' contains a list of products.
+            $.each(data, function (key, item) {
+              // Add a list item for the product.
+              $('<li>', { text: formatItem(item) }).appendTo($('#contato'));
+            });
+          });
+    });
+    function formatItem(item) {
+        return   ': Nome:'+ item.nome + ': Telefone:' + item.numero ;
+    }
+    function find() {
+      var id = $('#contatoId').val();
+      $.getJSON(uri + '/' + id)
+          .done(function (data) {
+            $('#contato2').text(formatItem(data));
+          })
+          .fail(function (jqXHR, textStatus, err) {
+            $('#contato2').text('Error: ' + err);
+          });
+    }
+    </script>
+</body>
+</html>
